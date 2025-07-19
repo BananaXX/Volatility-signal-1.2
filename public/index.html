@@ -1,0 +1,38 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Volatility Bot</title>
+  <style>
+    body { background: #111; color: #eee; text-align: center; font-family: sans-serif; padding: 30px; }
+    .status { background: #222; padding: 20px; border-radius: 10px; margin: 20px auto; max-width: 600px; }
+    button { padding: 10px 20px; background: limegreen; color: black; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="status">
+    <h2>📡 Volatility Bot Status</h2>
+    <p id="state">Loading...</p>
+    <button onclick="startBot()">▶ Start</button>
+    <button onclick="stopBot()">⏹ Stop</button>
+  </div>
+
+  <script>
+    async function startBot() {
+      const res = await fetch('/api/start', { method: 'POST' });
+      const json = await res.json();
+      alert(json.success ? 'Bot started!' : 'Failed');
+    }
+    async function stopBot() {
+      const res = await fetch('/api/stop', { method: 'POST' });
+      const json = await res.json();
+      alert(json.success ? 'Bot stopped!' : 'Failed');
+    }
+    setInterval(async () => {
+      const res = await fetch('/api/status');
+      const json = await res.json();
+      document.getElementById('state').innerText = `Running: ${json.isRunning} | Price: ${json.price}`;
+    }, 2000);
+  </script>
+</body>
+</html>
